@@ -77,9 +77,9 @@ const Countries = ({countries, searchedCountry}) => {
   const filtered = () => countries.filter((country) => 
   country.name.toLowerCase().includes(searchedCountry.toLowerCase()))
 
-  if (filtered().length >= 10){
+  if (filtered().length > 10){
     return (
-        <p>too many countries</p>     
+        <p>Too many matches, specify another filter</p>     
     )
   }
   else if (filtered().length === 1){
@@ -127,7 +127,7 @@ function App() {
       <div >
         <form onSubmit={searchCountry} >
           <div>
-            find countries <input value={searchedCountry}
+            Find countries <input value={searchedCountry}
             onChange={handleSearchChange}
             />
           </div>
