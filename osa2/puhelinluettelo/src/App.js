@@ -1,7 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
 
+  return (
+    <div className="success">
+      <p>{message}</p>
+    </div>
+  )
+}
+
+const ErrorMessage = ({ errorMsg }) => {
+  if (errorMsg === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      <p>{errorMsg}</p>
+    </div>
+  )
+}
 const Persons = ({persons, searchedName, removeData}) => {
   
   const filtered = () => persons.filter((person) => person.name.toLowerCase().includes(searchedName.toLowerCase()))
@@ -9,7 +31,7 @@ const Persons = ({persons, searchedName, removeData}) => {
   return(    
     filtered().map(person => 
     <p key={person.name}>{person.name} {person.number} 
-    <button onClick={() => removeData(person)}>remove</button>
+    <button onClick={() => removeData(person)}>delete</button>
     </p>
     
     )
@@ -54,6 +76,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [searchedName, setSearchedName ] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
     personService
@@ -88,6 +112,9 @@ const App = () => {
         setPersons(persons.concat(sentData))
         setNewName('')
         setNewNumber('')
+        setMessage(`${newData.name} added succesfully`)
+        setTimeout(()=> {
+          setMessage(null)},3000) 
       }) 
     }
   }
@@ -99,7 +126,11 @@ const App = () => {
         .remove(id)
         .then(success => {
           setPersons(persons.filter(person => person.id !== id))
-        }) 
+        })
+        
+        setMessage(`${person.name} removed succesfully`)
+        setTimeout(()=> {
+          setMessage(null)},3000) 
     }
   }
 
@@ -111,9 +142,18 @@ const App = () => {
       .update(id, changedData)
         .then(returnedData => {
         setPersons(persons.map(person => person.id !== id ? person : returnedData))
-      })
-      setNewName('')
-      setNewNumber('')
+        setMessage(`${person.name}'s number changed succesfully`)
+        setTimeout(()=> {
+          setMessage(null)},3000) 
+      }).catch(error => {
+        setErrorMsg(`Information of ${person.name} has already been removed from server`)
+        setPersons(persons.filter(person => person.id !== id))
+        setTimeout(()=> {
+          setErrorMsg(null)},3000) 
+        })
+    setNewName('')
+    setNewNumber('')
+      
       
   }
 
@@ -135,6 +175,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
+      <ErrorMessage errorMsg={errorMsg} />
       <Filter searchName={searchName} searchedName={searchedName} 
       handleSearch={handleSearch}/>
       <h2>add a new</h2>
