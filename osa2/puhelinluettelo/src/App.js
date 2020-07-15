@@ -124,9 +124,8 @@ const App = () => {
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .remove(id)
-        .then(success => {
-          setPersons(persons.filter(person => person.id !== id))
-        })
+        
+        setPersons(persons.filter(person => person.id !== id))
         
         setMessage(`${person.name} removed succesfully`)
         setTimeout(()=> {
