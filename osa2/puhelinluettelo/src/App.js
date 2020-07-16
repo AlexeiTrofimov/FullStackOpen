@@ -115,6 +115,11 @@ const App = () => {
         setMessage(`${newData.name} added succesfully`)
         setTimeout(()=> {
           setMessage(null)},3000) 
+      })
+      .catch(error => {
+        setErrorMsg(error.response.data.error)
+        setTimeout(()=> {
+          setErrorMsg(null)},3000)  
       }) 
     }
   }
