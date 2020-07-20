@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
+
 const blogSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -10,6 +13,12 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  user: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
   likes: Number
 })
 
