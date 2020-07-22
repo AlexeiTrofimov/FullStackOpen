@@ -20,10 +20,15 @@ const Blog = ({ blog, changedBlog,deleteBlog, username }) => {
         'likes': blog.likes + 1
       })
   }
+  const removeBlog = () => {
+    if (window.confirm('Delete Blog ?')) {
+      deleteBlog(blog.id)
+    }
+  }
 
   const [visible, setVisible] = useState(false)
+  const [buttonText, setButtonText] = useState('view')
 
-  const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
   var showIfLogged = { display: 'none' }
@@ -32,28 +37,30 @@ const Blog = ({ blog, changedBlog,deleteBlog, username }) => {
     showIfLogged = { display: '' }
   }
 
-
   const toggleVisibility = () => {
     setVisible(!visible)
+    if (buttonText === 'view'){
+      setButtonText('close')
+    }
+    else(
+      setButtonText('view')
+    )
   }
 
   return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+    <div style={blogStyle} >
+      <div>
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility}>view</button>
+        <button onClick={toggleVisibility}>{buttonText}</button>
       </div>
-      <div style={showWhenVisible}>
-        <p>{blog.title} {blog.author}
-          <button onClick={toggleVisibility}>close</button>
-        </p>
+      <div style={showWhenVisible} className="allInfo">
         <p>{blog.url}</p>
         <p>likes {blog.likes}
           <button onClick={giveLike}>like</button>
         </p>
         <p>{blog.user[0].name}</p>
         <div style={showIfLogged}>
-          <p><button onClick={() => deleteBlog(blog.id)}>remove</button></p>
+          <p><button onClick={removeBlog}>remove</button></p>
         </div>
       </div>
     </div>

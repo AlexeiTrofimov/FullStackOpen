@@ -76,11 +76,17 @@ const App = () => {
 
   }
   const addBlog = async (blogObject) => {
-    await blogService.create(blogObject)
+    try{
+      await blogService.create(blogObject)
 
-    setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-    setTimeout(() => {
-      setMessage(null)},3000)
+      setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+      setTimeout(() => {
+        setMessage(null)},3000)
+    } catch (exception) {
+      setErrorMsg('All fields must be filled')
+      setTimeout(() => {
+        setErrorMsg(null)},3000)
+    }
   }
 
   const changeBlog = async (id, blogObject) => {
@@ -142,6 +148,7 @@ const App = () => {
       <div>
         <h2>blogs</h2>
         <Notification message={message} />
+        <ErrorMessage errorMsg={errorMsg} />
 
         <p>
           {user.name} is logged in
