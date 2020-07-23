@@ -79,6 +79,8 @@ const App = () => {
     try{
       await blogService.create(blogObject)
 
+      blogService.getAll().then(blogs => setBlogs( blogs ))
+
       setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
       setTimeout(() => {
         setMessage(null)},3000)
@@ -92,6 +94,8 @@ const App = () => {
   const changeBlog = async (id, blogObject) => {
     await blogService.update(id, blogObject)
 
+    blogService.getAll().then(blogs => setBlogs( blogs ))
+
     setMessage(`you liked blog ${blogObject.title} by ${blogObject.author}`)
     setTimeout(() => {
       setMessage(null)},3000)
@@ -100,6 +104,7 @@ const App = () => {
   const deleteBlog = async (id) => {
     await blogService.remove(id)
 
+    setBlogs(blogs.filter(blog => blog.id !== id))
     setMessage('Blog deleted successfully')
     setTimeout(() => {
       setMessage(null)},3000)
@@ -125,7 +130,7 @@ const App = () => {
               <input
                 type="text"
                 value={username}
-                name="Username"
+                id="username"
                 onChange={({ target }) => setUsername(target.value)}
               />
             </div>
@@ -134,11 +139,11 @@ const App = () => {
               <input
                 type="password"
                 value={password}
-                name="Password"
+                id="password"
                 onChange={({ target }) => setPassword(target.value)}
               />
             </div>
-            <button type="submit">login</button>
+            <button id="login-button" type="submit">login</button>
           </form>
         </div>
       )

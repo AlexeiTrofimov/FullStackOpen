@@ -21,7 +21,7 @@ const Blog = ({ blog, changedBlog,deleteBlog, username }) => {
       })
   }
   const removeBlog = () => {
-    if (window.confirm('Delete Blog ?')) {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       deleteBlog(blog.id)
     }
   }
@@ -49,14 +49,14 @@ const Blog = ({ blog, changedBlog,deleteBlog, username }) => {
 
   return (
     <div style={blogStyle} >
-      <div>
+      <div id="shortInfo">
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility}>{buttonText}</button>
+        <button id="info-button" onClick={toggleVisibility}>{buttonText}</button>
       </div>
       <div style={showWhenVisible} className="allInfo">
         <p>{blog.url}</p>
         <p>likes {blog.likes}
-          <button onClick={giveLike}>like</button>
+          <button id="like-button" onClick={giveLike}>like</button>
         </p>
         <p>{blog.user[0].name}</p>
         <div style={showIfLogged}>
