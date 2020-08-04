@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Switch, Route, useHistory, useParams
+  Switch, Route, useHistory, Link, useParams
 } from "react-router-dom"
+import  { useField } from './hooks'
 
 const Notification = ({ message }) => {
   if (message === null) {
@@ -22,10 +23,9 @@ const Menu = () => {
   }
   return (
     <div>
-      <a href='/' style={padding}>anecdotes</a>
-      <a href='/create' style={padding}>create new</a>
-      <a href='/about' style={padding}>about</a>
-      
+      <Link to={'/'} style={padding}>anecdotes </Link>
+      <Link to={'/create'} style={padding}>create new </Link>
+      <Link to={'/about'} style={padding}>about </Link>    
     </div>
   )
 }
@@ -36,7 +36,7 @@ const AnecdoteList = ({ anecdotes }) => (
     <ul>
       {anecdotes.map(anecdote => 
       <li key={anecdote.id} >
-        <a href={`/anecdotes/${anecdote.id}`}>{anecdote.content}</a>
+        <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
       </li>)}
     </ul>
   </div>
@@ -77,25 +77,29 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
   const history = useHistory()
+  const content = useField('content')
+  const author = useField('author')
+  const info = useField('info')
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
-
-    props.setNotification(`a new anecdote ${content} created!`)
+    props.setNotification(`a new anecdote ${content.value} created!`)
     setTimeout(() => {
       props.setNotification(null)},10000)
 
     history.push('/')
+  }
+  const resetFields = () => {
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -104,17 +108,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content.formData} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author.formData} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info.formData} />
         </div>
         <button>create</button>
+        <button type='button' onClick={resetFields} >reset</button>
       </form>
       
     </div>
@@ -159,14 +164,15 @@ const App = () => {
     }
 
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
+    console.log(anecdotes)
   }
 
   return (
     <div>
-      <h1>Software anecdotes</h1>
-      <Menu />
-      <Notification message={notification} />
       <Router>
+        <h1>Software anecdotes</h1>
+        <Menu />
+        <Notification message={notification} />
         <Switch>
           <Route path="/about">
             <About />
