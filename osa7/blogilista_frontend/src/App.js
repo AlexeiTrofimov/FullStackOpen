@@ -4,28 +4,47 @@ import {
   BrowserRouter as Router,
   Switch, Route, Link, useParams
 } from 'react-router-dom'
+import {
+  Container,
+  Table,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  AppBar,
+  Toolbar,
+  Button,
+} from '@material-ui/core'
+
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/UserForm'
-
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import userService from './services/users'
-
-
-import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
 import { logOut } from './reducers/userReducer'
+import './index.css'
 
 const Menu = ({ name, dispatch }) => {
-  const padding = {
-    paddingRight: 5
-  }
   return (
-    <div className="menu">
-      <Link to={'/'} style={padding}>blogs </Link>
-      <Link to={'/users'} style={padding}>users</Link>
-      {name} is logged in
-      <button onClick={() => dispatch(logOut())}>logout</button>
+    <div>
+      <AppBar position="static">
+        <Toolbar>
+          <Button color="inherit" component={Link} to='/'>
+            blogs
+          </Button>
+          <Button color="inherit" component={Link} to='/users'>
+            users
+          </Button>
+          {name} is logged in
+          <Button onClick={() => dispatch(logOut())} color="inherit">
+            logout
+          </Button>
+        </Toolbar>
+      </AppBar>
     </div>
   )
 }
@@ -52,25 +71,28 @@ const Users = ({ users }) => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
-        </thead>
-        {users.map(user =>
-          <tbody key ={user.id}>
-            <tr>
-              <th>
-                <Link to={`/users/${user.id}`}>{user.name}</Link>
-              </th>
-              <th>
-                {user.blogs.length}
-              </th>
-            </tr>
-          </tbody>)}
-      </table>
+      <TableContainer component={Paper} elevation={3}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>blogs created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map(user => (
+              <TableRow key={user.id}>
+                <TableCell>
+                  <Link to={`/users/${user.id}`}>{user.name}</Link>
+                </TableCell>
+                <TableCell>
+                  {user.blogs.length}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
@@ -93,21 +115,21 @@ const BlogInfo = ({ blogs, user }) => {
 }
 
 const Blogs = ({ blogs }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    padding: 3,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
   return(
     <div>
-      {blogs.map(blog =>
-        <p style={blogStyle} key={blog.id}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
-        </p>
-      )}
+      <TableContainer component={Paper} elevation={3}>
+        <Table>
+          <TableBody>
+            {blogs.map(blog => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
@@ -139,7 +161,7 @@ const App = () => {
   const graphicalInterface = () => {
     if (user === null) {
       return (
-        <div>
+        <div className={'loginWindow'}>
           <h2>Log in to application</h2>
           <Notification />
           <LoginForm />
@@ -148,9 +170,9 @@ const App = () => {
     }
 
     return (
-      <div>
+      <div className={'blogWindow'}>
         <Router>
-          <h2>blogs</h2>
+          <h1>BLOGS</h1>
           <Notification />
           <Menu name={user.name} dispatch={dispatch} />
           <Switch>
@@ -174,9 +196,11 @@ const App = () => {
   }
 
   return (
-    <div>
-      {graphicalInterface()}
-    </div>
+    <Container className={'container'}>
+      <div>
+        {graphicalInterface()}
+      </div>
+    </Container>
   )
 }
 

@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import {
+  TextField,
+  Button,
+} from '@material-ui/core'
 
 import { setNotification } from './../reducers/notificationReducer'
 import { likeBlog, commentBlog, deleteBlog } from './../reducers/blogReducer'
@@ -40,23 +44,28 @@ const Blog = ({ blog , blogs, username }) => {
     <div>
       <p><a href={blog.url}>{blog.url}</a></p>
       <p>likes {blog.likes}
-        <button id="like-button" onClick={giveLike}>like</button>
+        <Button variant="contained" color="primary"  onClick={giveLike}>
+          like
+        </Button>
       </p>
       <p>{blog.user[0].name}</p>
       <div style={showIfLogged}>
-        <p><button onClick={removeBlog}>remove</button></p>
+        <Button variant="contained" color="primary"  onClick={removeBlog}>
+          remove
+        </Button>
       </div>
       <h3>comments</h3>
       <div>
         <form onSubmit={handleComment}>
           <div>
-            <input
-              type="text"
+            <TextField
+              label="comment"
               value={comment}
-              id="comment"
               onChange={({ target }) => setComment(target.value)}
             />
-            <button id="comment-button" type="submit"> add comment</button>
+            <Button variant="contained" color="primary" type="submit">
+              add comment
+            </Button>
           </div>
         </form>
       </div>

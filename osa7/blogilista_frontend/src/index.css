@@ -1,27 +1,7 @@
-.success {
-  color: green;
-  background: lightgrey;
-  font-size: 20px;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.error {
-  color: red;
-  background: lightgrey;
-  font-size: 20px;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.menu {
-  background: lightgrey;
-  font-size: 15px;
-  border-style: solid;
-  border-radius: 2px;
-  padding: 10px;
-  margin-bottom: 20px;
+.container {
+  color: white;
+  font-family: 'Roboto', sans-serif;
+  background-color: rgba(75, 110, 177, 0.514);
+  border: 5px solid black;
+  padding-bottom: 20px;
 }
